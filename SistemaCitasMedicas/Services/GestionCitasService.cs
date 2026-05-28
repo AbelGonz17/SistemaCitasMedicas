@@ -4,7 +4,7 @@ using SistemaCitasMedicas.Utils;
 
 namespace SistemaCitasMedicas.Services
 {
-    public class GestionCitasService
+    public class GestionCitasService : IGestionCitasService
     {
         private readonly ICitaRepository _citaRepository;
         private readonly IEnumerable<IRecordatorioCanal> _canalesNotificacion;
@@ -19,9 +19,9 @@ namespace SistemaCitasMedicas.Services
         {
             ValidarSoporte.ValidarFechaFutura(cita.FechaHora);
 
-            if(_citaRepository.ExisteColisionHoraria(cita.Medico.Id, cita.FechaHora))
+            if (_citaRepository.ExisteColisionHoraria(cita.Medico.Id, cita.FechaHora))
                 throw new InvalidOperationException($"El {cita.Medico.NombreCompleto} tiene una cita agendada en ese horario.");
-            
+
             cita.Estado = "Agendada";
             _citaRepository.Guardar(cita);
 
@@ -33,8 +33,8 @@ namespace SistemaCitasMedicas.Services
             var cita = _citaRepository.ObtenerPorId(citaId);
 
             if (cita == null)
-               throw new KeyNotFoundException("Cita no encontrada.");
-            
+                throw new KeyNotFoundException("Cita no encontrada.");
+
             cita.Estado = "Cancelada";
             NotificarPaciente(cita, "Su cita médica ha sido cancelada.");
         }
@@ -48,9 +48,9 @@ namespace SistemaCitasMedicas.Services
             if (cita == null)
                 throw new KeyNotFoundException("Cita no encontrada.");
 
-            if(_citaRepository.ExisteColisionHoraria(cita.Medico.Id, nuevaFechaHora))
+            if (_citaRepository.ExisteColisionHoraria(cita.Medico.Id, nuevaFechaHora))
                 throw new InvalidOperationException($"El {cita.Medico.NombreCompleto} tiene una cita agendada en ese horario.");
-            
+
             cita.FechaHora = nuevaFechaHora;
             cita.Estado = "Reprogramada";
 
@@ -71,7 +71,7 @@ namespace SistemaCitasMedicas.Services
         {
             string mensajeFormateado = $"Estimado(a) {cita.Paciente.NombreCompleto}. " + cuerpoMensaje;
 
-            foreach( var canal  in _canalesNotificacion)
+            foreach (var canal in _canalesNotificacion)
             {
                 canal.Enviar(cita, mensajeFormateado);
             }

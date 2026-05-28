@@ -5,8 +5,8 @@ using SistemaCitasMedicas.Services;
 
 class Program
 {
-    private static GestionPersonalServices _personalService = null!;
-    private static GestionCitasService _citasService = null!;
+    private static IGestionPersonalServices _personalService = null!;
+    private static IGestionCitasService _citasService = null!;
     private static List<Especialidad> _especialidadesGlobales = new List<Especialidad>();
 
     static void Main(string[] args)

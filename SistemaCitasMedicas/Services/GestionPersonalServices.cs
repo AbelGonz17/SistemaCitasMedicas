@@ -1,9 +1,10 @@
-﻿using SistemaCitasMedicas.Models;
+﻿using SistemaCitasMedicas.Interfaces;
+using SistemaCitasMedicas.Models;
 using SistemaCitasMedicas.Utils;
 
 namespace SistemaCitasMedicas.Services
 {
-    public class GestionPersonalServices
+    public class GestionPersonalServices : IGestionPersonalServices
     {
         private readonly List<Paciente> _pacientes = new List<Paciente>();
         private readonly List<Medico> _medicos = new List<Medico>();
@@ -28,7 +29,7 @@ namespace SistemaCitasMedicas.Services
         {
             ValidarSoporte.ValidarTextoObligatorio(medico.NombreCompleto, "Nombre del Médico");
 
-            if(medico.EspecialidadAsignada == null || string.IsNullOrEmpty(medico.EspecialidadAsignada.Nombre))
+            if (medico.EspecialidadAsignada == null || string.IsNullOrEmpty(medico.EspecialidadAsignada.Nombre))
             {
                 throw new ArgumentException("El médico debe tener una especialidad valida asignada");
             }
